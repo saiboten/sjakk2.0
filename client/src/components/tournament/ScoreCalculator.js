@@ -1,10 +1,13 @@
 import firebase from '../firebase/FirebaseInit';
 
 const debug = require('debug')('ScoreCalculator');
-const EloRank = require('elo-rank');
 
-const elo = new EloRank();
-
+const getExpected = (a, b) => {
+  return 1/(1+Math.pow(10,((b-a)/400)));
+}
+const updateRating = (expected, actual, current) => {
+  return Math.round(current+ this.k*(actual-expected));
+}
 
 class ScoreCalculator {
   static calculateScore(white, black, match, winner) {
@@ -17,23 +20,23 @@ class ScoreCalculator {
     updatedObject.whiteInitialRating = white.rating;
     updatedObject.blackInitialRating = black.rating;
 
-    const expectedScoreWhite = elo.getExpected(white.rating, black.rating);
-    const expectedScoreBlack = elo.getExpected(black.rating, white.rating);
+    const expectedScoreWhite = getExpected(white.rating, black.rating);
+    const expectedScoreBlack = getExpected(black.rating, white.rating);
     let newRatingWhite = -1;
     let newRatingBlack = -1;
 
     if (winner === 'white') {
       updatedObject.whiteWon = true;
-      newRatingWhite = elo.updateRating(expectedScoreWhite, 1, white.rating);
-      newRatingBlack = elo.updateRating(expectedScoreBlack, 0, black.rating);
+      newRatingWhite = updateRating(expectedScoreWhite, 1, white.rating);
+      newRatingBlack = updateRating(expectedScoreBlack, 0, black.rating);
     } else if (winner === 'black') {
       updatedObject.blackWon = true;
-      newRatingWhite = elo.updateRating(expectedScoreWhite, 0, white.rating);
-      newRatingBlack = elo.updateRating(expectedScoreBlack, 1, black.rating);
+      newRatingWhite = updateRating(expectedScoreWhite, 0, white.rating);
+      newRatingBlack = updateRating(expectedScoreBlack, 1, black.rating);
     } else {
       updatedObject.remis = true;
-      newRatingWhite = elo.updateRating(expectedScoreWhite, 0.5, white.rating);
-      newRatingBlack = elo.updateRating(expectedScoreBlack, 0.5, black.rating);
+      newRatingWhite = updateRating(expectedScoreWhite, 0.5, white.rating);
+      newRatingBlack = updateRating(expectedScoreBlack, 0.5, black.rating);
     }
 
     updatedObject.blackRatingChange = newRatingBlack - black.rating;

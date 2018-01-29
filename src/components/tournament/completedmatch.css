@@ -1,0 +1,38 @@
+.completedMatch__tie {
+  border: 2px solid black;
+  padding: 5px;
+  flex-basis: 3.5em;
+  text-align: left;
+}
+
+.completedMatch__won {
+  color: white;
+  background-color: green;
+  border: 2px solid #092900;
+  padding: 5px;
+  flex-basis: 3.5em;
+  text-align: left;
+}
+
+.completedMatch__lost {
+  color: white;
+  background-color: red;
+  border: 2px solid #092900;
+  padding: 5px;
+  flex-basis: 3.5em;
+  text-align: left;
+}
+
+.completedMatch__names {
+  font-size: 1em;
+}
+
+.completedMatch__rating {
+  font-size: 0.7em;
+}
+
+.completedMatch__deleteMatch__button {
+  margin-left: 5px;
+  width: 78px;
+  margin-bottom: 5px;
+}
